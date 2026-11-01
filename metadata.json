@@ -1,0 +1,6 @@
+{
+  "name": "Nova - Personal Research Companion",
+  "description": "A conversational research companion that gathers information and delivers synthesized, persona-driven answers without AI models or external AI APIs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

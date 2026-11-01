@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WebMind AI</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>">
+<style>
+:root{--bg:#0b0716;--card:rgba(255,255,255,.05);--line:rgba(139,92,246,.28);--text:#ece9f7;--mut:#a79fc4;--acc:#a78bfa;--grad:linear-gradient(135deg,#4f46e5,#7c3aed);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(900px 500px at 10% -10%,#2a1565 0,transparent 60%),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
+header{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:780px;margin:0 auto;padding:14px 16px;padding-top:max(14px,env(safe-area-inset-top))}
+.brand{font-size:20px;font-weight:700}.brand b{color:var(--acc)}
+#new{background:none;border:1px solid var(--line);color:var(--text);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+#new:hover{background:rgba(139,92,246,.16)}
+#feed{flex:1;overflow-y:auto;width:100%;max-width:780px;margin:0 auto;padding:4px 16px 12px}
+.hero{margin:12vh 0 0;text-align:center}
+.hero h1{font-size:28px;line-height:1.2;margin:0 0 10px}.hero h1 b{color:var(--acc)}
+.hero p{color:var(--mut);margin:0 auto 20px;max-width:420px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:9px 15px;font:inherit;font-size:14px;cursor:pointer}
+.chip:hover{background:rgba(139,92,246,.18)}
+.msg{display:flex;margin:14px 0}
+.msg.user{justify-content:flex-end}
+.bubble{background:var(--grad);padding:10px 16px;border-radius:20px 20px 6px 20px;max-width:85%;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.bot{gap:10px}
+.avatar{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--acc)}
+.card{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 16px;overflow-wrap:anywhere}
+.card p{margin:0 0 .7em}.card p:last-child{margin:0}
+.card ul{margin:0 0 .7em;padding-left:1.2em}
+.card h4{margin:.8em 0 .3em;font-size:16px}
+.card a{color:var(--acc)}
+.card code{background:rgba(255,255,255,.1);padding:1px 6px;border-radius:6px;font-size:.9em}
+.status{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:14px}.status:empty{display:none}
+.spin{width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:s .8s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.cite{display:inline-grid;place-items:center;min-width:18px;height:18px;margin:0 1px;padding:0 4px;border-radius:9px;background:rgba(139,92,246,.3);color:var(--text)!important;font-size:11px;text-decoration:none;vertical-align:text-top}
+.srcs:empty{display:none}
+.label{margin:14px 0 2px;color:var(--acc);font-size:14px;font-weight:600}
+.src{display:flex;align-items:center;gap:10px;margin-top:8px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);text-decoration:none}
+.src:hover{background:rgba(139,92,246,.14)}
+.ico{flex:none;width:30px;height:30px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-size:13px;font-weight:700;color:#fff}
+.t{flex:1;min-width:0}
+.t strong{display:block;color:var(--text);font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t small{color:var(--acc);font-size:13px}
+form{display:flex;align-items:flex-end;gap:8px;width:100%;max-width:780px;margin:0 auto;padding:8px 16px 4px}
+textarea{flex:1;resize:none;max-height:140px;padding:12px 18px;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.06);color:var(--text);font:inherit;outline:none}
+textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(167,139,250,.25)}
+#send{flex:none;width:46px;height:46px;border:0;border-radius:50%;background:var(--grad);color:#fff;font-size:20px;cursor:pointer}
+#send:disabled{opacity:.45;cursor:default}
+#send:focus-visible,#new:focus-visible,.chip:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.copy{margin-top:10px;background:none;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:3px 12px;font:inherit;font-size:12px;cursor:pointer}
+.copy:hover{color:var(--text)}
+.note{margin:0;padding:0 16px max(10px,env(safe-area-inset-bottom));text-align:center;color:var(--mut);font-size:12px}
+</style>
+</head>
+<body>
+<header><div class="brand">WebMind <b>AI</b></div><button id="new" type="button">New chat</button></header>
+<main id="feed" aria-live="polite"></main>
+<form id="form">
+  <textarea id="input" rows="1" placeholder="Ask anything…" aria-label="Message"></textarea>
+  <button id="send" type="submit" aria-label="Send">➤</button>
+</form>
+<p class="note">WebMind AI can make mistakes. Check the sources for anything important.</p>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const feed = $("#feed"), form = $("#form"), input = $("#input"), sendBtn = $("#send");
+const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const safe = (list) => (Array.isArray(list) ? list : []).filter((s) => /^https?:\/\//i.test(s.url));
+
+// Minimal, escape-first markdown: bold, code, links, lists, headings, [n] citations.
+function md(text, sources = []) {
+  const cite = (n) => {
+    const s = sources.find((x) => x.id === +n);
+    return s ? `<a class="cite" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" title="${esc(s.domain)}">${n}</a>` : `[${n}]`;
+  };
+  const inline = (t) => esc(t)
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/`(.+?)`/g, "<code>$1</code>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\[(\d+)\]/g, (_, n) => cite(n));
+  const out = [];
+  let list = false;
+  for (const line of text.split("\n")) {
+    const li = line.match(/^\s*(?:[-*•]|\d+\.)\s+(.*)/);
+    if (li) {
+      if (!list) out.push("<ul>");
+      list = true;
+      out.push(`<li>${inline(li[1])}</li>`);
+      continue;
+    }
+    if (list) { out.push("</ul>"); list = false; }
+    const h = line.match(/^#{1,4}\s+(.*)/);
+    if (h) out.push(`<h4>${inline(h[1])}</h4>`);
+    else if (line.trim()) out.push(`<p>${inline(line)}</p>`);
+  }
+  if (list) out.push("</ul>");
+  return out.join("");
+}
+
+let history = [];
+try { history = JSON.parse(localStorage.getItem("webmind-history") || "[]"); } catch {}
+const save = () => { try { localStorage.setItem("webmind-history", JSON.stringify(history.slice(-40))); } catch {} };
+const el = (html) => { const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content.firstChild; };
+const scrollDown = () => feed.scrollTo({ top: feed.scrollHeight });
+
+const srcHtml = (list) => list.map((s) =>
+  `<a class="src" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer"><div class="ico">${esc((s.domain || "?")[0].toUpperCase())}</div><div class="t"><strong>${esc(s.title || s.domain)}</strong><small>${esc(s.domain)}</small></div></a>`).join("");
+
+const hero = () => el(`<div class="hero" id="hero"><h1>Ask <b>WebMind AI</b> anything</h1><p>I answer from general knowledge and search the web when you need current information.</p><div class="chips">${["Latest SpaceX news", "Top tech headlines today", "Explain how vaccines work"].map((t) => `<button type="button" class="chip">${t}</button>`).join("")}</div></div>`);
+
+function addUser(text) {
+  feed.append(el(`<div class="msg user"><div class="bubble">${esc(text)}</div></div>`));
+}
+
+function addBot(content = "", sources = []) {
+  const n = el(`<div class="msg bot"><div class="avatar">✦</div><div class="card"><div class="status"></div><div class="body"></div><div class="srcs"></div><button type="button" class="copy" hidden>Copy</button></div></div>`);
+  feed.append(n);
+  const api = {
+    status: (t) => (n.querySelector(".status").innerHTML = t ? `<i class="spin"></i><span>${esc(t)}</span>` : ""),
+    body: (text, src) => (n.querySelector(".body").innerHTML = md(text, src)),
+    sources: (src) => (n.querySelector(".srcs").innerHTML = src.length ? `<div class="label">Sources</div>${srcHtml(src)}` : ""),
+    done: (text) => {
+      const b = n.querySelector(".copy");
+      b.hidden = false;
+      b.onclick = async () => {
+        try { await navigator.clipboard.writeText(text); b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1500); } catch {}
+      };
+    },
+  };
+  if (content) { api.body(content, sources); api.sources(sources); api.done(content); }
+  return api;
+}
+
+let busy = false, ctrl;
+const setBusy = (b) => {
+  busy = b;
+  sendBtn.textContent = b ? "■" : "➤";
+  sendBtn.setAttribute("aria-label", b ? "Stop" : "Send");
+};
+async function ask(text) {
+  text = text.trim();
+  if (!text || busy) return;
+  ctrl = new AbortController();
+  setBusy(true);
+  $("#hero")?.remove();
+  history.push({ role: "user", content: text });
+  addUser(text);
+  const bot = addBot();
+  bot.status("Thinking…");
+  scrollDown();
+  let answer = "", sources = [];
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      signal: ctrl.signal,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ messages: history.map(({ role, content }) => ({ role, content })) }),
+    });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || "Request failed.");
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      const parts = buf.split("\n\n");
+      buf = parts.pop();
+      for (const part of parts) {
+        const ev = /^event: (.+)$/m.exec(part)?.[1];
+        const data = JSON.parse(/^data: (.+)$/m.exec(part)?.[1] || "{}");
+        if (ev === "status") bot.status(data.text);
+        else if (ev === "sources") { sources = safe(data); bot.sources(sources); }
+        else if (ev === "token") { answer += data.text; bot.status(""); bot.body(answer, sources); scrollDown(); }
+        else if (ev === "error") throw new Error(data.text);
+      }
+    }
+    bot.status("");
+    if (!answer) throw new Error("No answer came back. Try again.");
+    history.push({ role: "assistant", content: answer, sources });
+    bot.done(answer);
+  } catch (err) {
+    bot.status("");
+    if (err.name === "AbortError" && answer) {
+      history.push({ role: "assistant", content: answer, sources }); // keep what was written before Stop
+      bot.done(answer);
+    } else {
+      bot.body(err.name === "AbortError" ? "Stopped." : "\u26a0\ufe0f " + err.message, []);
+      history.pop(); // drop the unanswered question so history stays in order
+    }
+  }
+  save();
+  setBusy(false);
+  input.focus();
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (busy) { ctrl.abort(); return; }
+  const t = input.value;
+  input.value = "";
+  input.style.height = "auto";
+  ask(t);
+});
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); if (!busy) form.requestSubmit(); }
+});
+input.addEventListener("input", () => {
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 140) + "px";
+});
+feed.addEventListener("click", (e) => { const c = e.target.closest(".chip"); if (c) ask(c.textContent); });
+$("#new").addEventListener("click", () => {
+  if (busy) return;
+  history = [];
+  save();
+  feed.innerHTML = "";
+  feed.append(hero());
+});
+
+if (history.length) history.forEach((m) => (m.role === "user" ? addUser(m.content) : addBot(m.content, safe(m.sources))));
+else feed.append(hero());
+scrollDown();
+</script>
+</body>
+</html>
